@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Am I</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+
+<style>
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:#fff;
+  font-family:"Indie Flower", system-ui, sans-serif;
+  overflow:hidden;
+}
+
+.wrapper{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
+/* center title+input */
+.center{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -60%);
+  text-align:center;
+  width: 100%;
+  max-width: 980px;
+}
+
+h1{
+  font-size:clamp(48px,7vw,110px);
+  margin:0;
+  letter-spacing:2px;
+}
+
+.input-area{
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:6px;
+  width: 100%;
+}
+
+.quote{
+  font-size: clamp(15px, 3.5vw, 52px);
+  line-height: 1;
+  transform:translateY(2px);
+}
+
+.input-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+#code{
+  font-family:"Indie Flower", system-ui, sans-serif;
+  font-size: clamp(22px, 3vw, 44px);
+  line-height:1;
+  color:white;
+  background:transparent;
+  border:none;
+  outline:none;
+
+  width:240px;
+  text-align:center;
+  padding: 2px 6px 0 6px;
+}
+
+.line{
+  width:240px;
+  height:18px;
+  margin-top:8px;
+  display:block;
+}
+
+#code:not(:placeholder-shown) + svg{
+  opacity:0;
+}
+
+/* gif bottom */
+.character{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:220px;
+  max-width:70vw;
+}
+
+/* hidden youtube player when created */
+#ytPlayer{
+  position:fixed;
+  width:0;
+  height:0;
+  left:-9999px;
+  top:-9999px;
+  border:0;
+  opacity:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="center">
+    <h1 id="title">WHO AM I?</h1>
+
+    <div class="input-area" id="inputArea">
+      <span class="quote">"</span>
+
+      <div class="input-wrap">
+        <input id="code" placeholder=" " autocomplete="off" autocapitalize="off" spellcheck="false">
+
+        <svg class="line" viewBox="0 0 600 60" aria-hidden="true">
+          <path d="M20,35
+                   C120,18 180,45 260,34
+                   C340,22 420,46 500,33
+                   C540,30 570,38 580,34"
+                fill="none"
+                stroke="white"
+                stroke-width="6"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <span class="quote">"</span>
+    </div>
+  </div>
+
+  <img id="gif" class="character" alt="">
+</div>
+
+<script>
+const input = document.getElementById("code");
+const gif   = document.getElementById("gif");
+const title = document.getElementById("title");
+const inputArea = document.getElementById("inputArea");
+
+const DOC_URL = "https://docs.google.com/document/d/1ha6r3ZPRB9mmf8sckdh6b9EZuO4yM38k_cg0dX4c5ic/edit?usp=sharing";
+
+const GIF_START = "https://uploads.onecompiler.io/44as2e7nt/44arzustv/who%20am%20i%20test%20%E0%B9%81%E0%B8%81%E0%B9%89.gif";
+const GIF_OH    = "https://uploads.onecompiler.io/44as2e7nt/44arzustv/oh%20test%20%E0%B9%81%E0%B8%81%E0%B9%89.gif";
+
+gif.src = GIF_START;
+
+function normalize(v){
+  return v.trim().toLowerCase().replace(/\s+/g," ");
+}
+
+/* ✅ create BGM only when entering OH */
+let bgmStarted = false;
+function startOhBgm(){
+  if (bgmStarted) return;
+  bgmStarted = true;
+
+  const iframe = document.createElement("iframe");
+  iframe.id = "ytPlayer";
+  iframe.allow = "autoplay";
+  iframe.src =
+    "https://www.youtube.com/embed/6o79RN3BnNE?autoplay=1&loop=1&playlist=6o79RN3BnNE&controls=0&mute=0";
+
+  document.body.appendChild(iframe);
+}
+
+function submitCode(){
+  const v = normalize(input.value);
+
+  if (v === "ike") {
+    window.location.href = DOC_URL;
+    return;
+  }
+
+  if (v === "my son" || v === "my brother") {
+    title.textContent = "Oh";
+    gif.src = GIF_OH;
+    inputArea.style.display = "none";
+
+    // ✅ start music only here
+    startOhBgm();
+    return;
+  }
+}
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    submitCode();
+  }
+});
+
+input.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") submitCode();
+});
+
+window.addEventListener("load", () => input.focus());
+</script>
+</body>
+</html>
